@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NoteTaker | Premium Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="/Project-templates/static/Css/home.css">
+</head>
+<body>
+    <!-- Navigation Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon"></div>
+            NoteTaker.
+        </div>
+        
+        <div class="nav-section">
+            <p class="nav-label">Menu</p>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active" data-view="overview"><i data-lucide="layout-dashboard"></i> Overview</a></li>
+                <li><a href="dashboard.html" data-view="dashboard"><i data-lucide="history"></i> Dashboard</a></li>
+                <li><a href="notebooks.html" data-view="notebooks"><i data-lucide="folder"></i> Notebooks</a></li>
+                <li><a href="starred.html" data-view="starred"><i data-lucide="star"></i> Starred</a></li>
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <p class="nav-label">Workspace</p>
+            <ul class="nav-links">
+                <li><a href="team.html" data-view="team"><i data-lucide="users"></i> Team Space</a></li>
+                <li><a href="archive.html" data-view="archive"><i data-lucide="archive"></i> Archive</a></li>
+                <li><a href="trash.html" data-view="trash"><i data-lucide="trash-2"></i> <span>Trash <span class="trash-count">0</span></span></a></li>
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <p class="nav-label">Appearance</p>
+            <div class="theme-picker">
+                <div class="color-options">
+                    <button class="color-btn active" style="background: #ffffff;" data-color="#ffffff"></button>
+                    <button class="color-btn" style="background: #0f172a;" data-color="#0f172a"></button>
+                    <button class="color-btn" style="background: #1e1b4b;" data-color="#1e1b4b"></button>
+                    <button class="color-btn" style="background: #064e3b;" data-color="#064e3b"></button>
+                    <button class="color-btn" style="background: #450a0a;" data-color="#450a0a"></button>
+                    <button class="color-btn" style="background: #3f2b1c;" data-color="#3f2b1c"></button>
+                    <button class="color-btn" style="background: #1c1917;" data-color="#1c1917"></button>
+                    <button class="color-btn" style="background: #2e1065;" data-color="#2e1065"></button>
+                </div>
+                <div class="custom-color-wrapper">
+                    <input type="color" id="customColor" class="custom-color-picker">
+                    <span class="custom-label">Custom Theme</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-section user-section">
+            <p class="nav-label">Account</p>
+            <ul class="nav-links">
+                <li><a href="settings.html" data-view="settings"><i data-lucide="settings"></i> Settings</a></li>
+                <li><a href="#" class="logout-btn"><i data-lucide="log-out"></i> Logout</a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main Content Area (This will be loaded dynamically) -->
+    <div class="page-wrapper">
+        <main class="main-content" id="pageContent">
+            <!-- Content will be loaded here -->
+        </main>
+    </div>
+
+    <!-- Footer (Present on all pages) -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-about">
+                <div class="logo">
+                    <img class="logo-footer" src="https://i.pinimg.com/1200x/a2/26/87/a226875eca382500fb6bd1ae20380d20.jpg" alt="Logo">
+                    <img class="logo-footer" src="https://i.pinimg.com/1200x/a2/26/87/a226875eca382500fb6bd1ae20380d20.jpg" alt="Logo">
+                    <img class="logo-footer" src="https://i.pinimg.com/1200x/a2/26/87/a226875eca382500fb6bd1ae20380d20.jpg" alt="Logo">
+                </div>
+                <p>The Note Taker App is a web-based application that allows users to create, edit, delete, and organize their notes.</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i data-lucide="facebook"></i></a>
+                    <a href="#" class="social-icon"><i data-lucide="twitter"></i></a>
+                    <a href="#" class="social-icon"><i data-lucide="instagram"></i></a>
+                    <a href="#" class="social-icon"><i data-lucide="linkedin"></i></a>
+                    <a href="#" class="social-icon"><i data-lucide="github"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <div>
+                    <h3>Note taker page</h3>
+                    <ul>
+                        <li><a href="index.html">Overview Page</a></li>
+                        <li><a href="team.html">Workspace Page</a></li>
+                        <li><a href="settings.html">Settings Page</a></li>
+                        <li><a href="profile.html">Edit Profile</a></li>
+                        <li><a href="login.html">Login Page</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Menu page</h3>
+                    <ul>
+                        <li><a href="index.html">Overview</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="notebooks.html">Notebooks</a></li>
+                        <li><a href="starred.html">Starred</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Workspace</h3>
+                    <ul>
+                        <li><a href="team.html">Team Space</a></li>
+                        <li><a href="archive.html">Archive</a></li>
+                        <li><a href="trash.html">Trash</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>Copyright © 2024 – NoteTaker Premium All Rights Reserved</p>
+                <div class="bottom-links">
+                    <a href="terms.html">Terms</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="support.html">Support</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top" id="backToTop">
+        <i data-lucide="arrow-up"></i>
+    </a>
+
+    <!-- All Modals (Loaded once) -->
+    <div id="noteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">New Note</h2>
+                <button class="close-modal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="form-group">
+                <label for="noteTitle">Title</label>
+                <input type="text" id="noteTitle" placeholder="Enter note title...">
+            </div>
+            <div class="form-group">
+                <label for="noteContent">Content</label>
+                <textarea id="noteContent" placeholder="Write your note here..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="noteTag">Tag</label>
+                <select id="noteTag">
+                    <option value="General">General</option>
+                    <option value="Work">Work</option>
+                    <option value="Personal">Personal</option>
+                    <option value="Ideas">Ideas</option>
+                    <option value="Study">Study</option>
+                    <option value="Project">Project</option>
+                    <option value="Meeting">Meeting</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button class="btn-secondary cancel-btn">Cancel</button>
+                <button class="btn-primary save-note-btn">Save Note</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="close-modal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="form-group">
+                <label for="userNameInput">Display Name</label>
+                <input type="text" id="userNameInput" placeholder="Enter your name...">
+            </div>
+            <div class="form-group">
+                <label>Auto-save Interval (seconds)</label>
+                <select id="autoSaveInterval">
+                    <option value="5">5 seconds</option>
+                    <option value="10">10 seconds</option>
+                    <option value="30" selected>30 seconds</option>
+                    <option value="60">1 minute</option>
+                    <option value="300">5 minutes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Default Note View</label>
+                <select id="defaultView">
+                    <option value="all">All Notes</option>
+                    <option value="recent">Recent First</option>
+                    <option value="starred">Starred Only</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button class="btn-secondary cancel-settings-btn">Cancel</button>
+                <button class="btn-primary save-settings-btn">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/Project-templates/static/JS/app.js"></script>
+</body>
+</html>
