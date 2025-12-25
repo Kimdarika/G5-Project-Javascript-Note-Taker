@@ -51,19 +51,16 @@ let notes = JSON.parse(localStorage.getItem('saved-notes')) || [
         deletedAt: null
     }
 ];
-
 let tasks = JSON.parse(localStorage.getItem('saved-tasks')) || [
     { id: 1, text: 'Review PR for dashboard', done: false, createdAt: Date.now() },
     { id: 2, text: 'Weekly team sync', done: true, createdAt: Date.now() - 86400000 },
     { id: 3, text: 'Update documentation', done: false, createdAt: Date.now() - 172800000 }
 ];
-
 let events = JSON.parse(localStorage.getItem('saved-events')) || [
     { id: 1, title: 'Design Review', time: '20m', date: new Date(Date.now() + 1200000).toISOString() },
     { id: 2, title: 'Client Meeting', time: '2:00 PM', date: new Date().setHours(14, 0, 0, 0) },
     { id: 3, title: 'Project Deadline', time: 'Tomorrow', date: new Date(Date.now() + 86400000).toISOString() }
 ];
-
 function getTimeAgo(date) {
     const now = new Date();
     const diff = now - date;
@@ -76,17 +73,14 @@ function getTimeAgo(date) {
     if (days < 7) return `${days}d ago`;
     return date.toLocaleDateString();
 }
-
 function saveToLocalStorage() {
     localStorage.setItem('saved-notes', JSON.stringify(notes));
     localStorage.setItem('saved-tasks', JSON.stringify(tasks));
     localStorage.setItem('saved-events', JSON.stringify(events));
 }
-
 function refreshIcons() {
     lucide.createIcons();
 }
-
 function updateClock() {
     const now = new Date();
     const timeString = now.toLocaleTimeString([], { 
@@ -96,7 +90,6 @@ function updateClock() {
     });
     document.getElementById('digitalClock').innerText = timeString;
 }
-
 const viewConfig = {
     'all': { icon: 'pin', text: 'My Notes', color: 'var(--primary)' },
     'starred': { icon: 'star', text: 'Starred Notes', color: '#fbbf24' },
@@ -106,15 +99,11 @@ const viewConfig = {
     'archive': { icon: 'archive', text: 'Archived Notes', color: 'var(--primary)' },
     'trash': { icon: 'trash-2', text: 'Trash', color: 'var(--danger)' }
 };
-
 function setView(view) {
     currentView = view;
     const title = document.getElementById('gridTitle');
     const config = viewConfig[view];
-    
     let titleHTML = `<i data-lucide="${config.icon}" style="color: ${config.color}"></i> ${config.text}`;
-    
-    // Add empty trash button for trash view
     if (view === 'trash') {
         const trashNotes = notes.filter(n => n.deleted);
         titleHTML += `
@@ -125,14 +114,11 @@ function setView(view) {
             </button>
         `;
     }
-    
     title.innerHTML = titleHTML;
-    
     updateNavLinks(view);
     renderNotes();
     refreshIcons();
 }
-
 function updateNavLinks(activeView) {
     document.querySelectorAll('.nav-links a').forEach(link => {
         link.classList.remove('active');
@@ -141,7 +127,6 @@ function updateNavLinks(activeView) {
     const activeLink = document.querySelector(`.nav-links a[onclick*="setView('${activeView}')"]`);
     if (activeLink) activeLink.classList.add('active');
 }
-
 function changeBg(color, btnElement = null) {
     document.documentElement.style.setProperty('--bg-dark', color);
     const hex = color.replace('#', '');
@@ -160,12 +145,10 @@ function changeBg(color, btnElement = null) {
         btnElement.classList.add('active');
     }
 }
-
 function renderNotes(searchTerm = '') {
     const grid = document.getElementById('notesGrid');
     grid.innerHTML = '';
     let filteredNotes = filterNotesByView(notes, currentView);
-    
     if (searchTerm) {
         filteredNotes = filteredNotes.filter(note => 
             note.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -173,8 +156,6 @@ function renderNotes(searchTerm = '') {
             note.tag.toLowerCase().includes(searchTerm.toLowerCase())
         );
     }
-    
-    // Only sort if not in trash view (trash is already sorted by deletion time)
     if (currentView !== 'trash') {
         filteredNotes.sort((a, b) => {
             if (a.pinned && !b.pinned) return -1;
@@ -188,11 +169,9 @@ function renderNotes(searchTerm = '') {
     } else {
         filteredNotes.forEach(note => createNoteCard(grid, note));
     }
-    
     updateNoteStats();
     refreshIcons();
 }
-
 function filterNotesByView(notesList, view) {
     switch(view) {
         case 'starred': 
@@ -209,7 +188,6 @@ function filterNotesByView(notesList, view) {
             return notesList.filter(n => !n.deleted); // All notes excludes deleted
     }
 }
-
 function showEmptyState(grid, searchTerm) {
     grid.innerHTML = `
         <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
@@ -221,12 +199,9 @@ function showEmptyState(grid, searchTerm) {
         </div>
     `;
 }
-
 function createNoteCard(grid, note) {
     const card = document.createElement('div');
     card.className = `note-card ${note.pinned ? 'pinned' : ''} ${note.deleted ? 'deleted' : ''}`;
-    
-    // Add visual indicator for deleted notes
     if (note.deleted) {
         card.style.opacity = '0.7';
         card.style.borderLeft = '3px solid var(--danger)';
@@ -235,12 +210,9 @@ function createNoteCard(grid, note) {
     if (note.color && note.color !== 'transparent') {
         card.style.borderTop = `4px solid ${note.color}`;
     }
-    
     const timeAgo = note.deleted 
         ? getTimeAgo(new Date(note.deletedAt))
         : getTimeAgo(new Date(note.createdAt));
-    
-    // Different actions based on view
     let actionButtons = '';
     if (currentView === 'trash') {
         actionButtons = `
@@ -265,10 +237,7 @@ function createNoteCard(grid, note) {
             </div>
         `;
     }
-    
-    // Add deleted indicator to title
     const titleText = note.deleted ? `${note.title} (Deleted)` : note.title;
-    
     card.innerHTML = `
         <div class="note-header">
             <span class="tag-pill ${note.deleted ? 'deleted-tag' : ''}">${note.tag}</span>
@@ -282,14 +251,11 @@ function createNoteCard(grid, note) {
                 `<div class="color-indicator" style="background: ${note.color}"></div>` : ''}
         </div>
     `;
-    
     grid.appendChild(card);
 }
-
 function editNote(id) {
     openNoteModal(id);
 }
-
 function deleteNote(id) {
     if (confirm("Move this note to trash?")) {
         const noteIndex = notes.findIndex(n => n.id === id);
@@ -307,7 +273,6 @@ function deleteNote(id) {
         }
     }
 }
-
 function restoreNote(id) {
     const noteIndex = notes.findIndex(n => n.id === id);
     if (noteIndex !== -1) {
@@ -317,14 +282,12 @@ function restoreNote(id) {
         saveAndRefresh();
     }
 }
-
 function permanentDeleteNote(id) {
     if (confirm("Permanently delete this note? This action cannot be undone.")) {
         notes = notes.filter(note => note.id !== id);
         saveAndRefresh();
     }
 }
-
 function emptyTrash() {
     const trashNotes = notes.filter(n => n.deleted);
     if (trashNotes.length === 0) return;
@@ -334,7 +297,6 @@ function emptyTrash() {
         saveAndRefresh();
     }
 }
-
 function togglePin(id) {
     const note = notes.find(n => n.id === id);
     if (note && !note.deleted) {
@@ -343,7 +305,6 @@ function togglePin(id) {
         saveAndRefresh();
     }
 }
-
 function toggleStar(id) {
     const note = notes.find(n => n.id === id);
     if (note && !note.deleted) {
@@ -352,7 +313,6 @@ function toggleStar(id) {
         saveAndRefresh();
     }
 }
-
 function changeNoteColor(id) {
     const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#a855f7', 'transparent'];
     const note = notes.find(n => n.id === id);
@@ -365,7 +325,6 @@ function changeNoteColor(id) {
         saveAndRefresh();
     }
 }
-
 function renderTasks() {
     const list = document.getElementById('todoList');
     list.innerHTML = '';
@@ -388,7 +347,6 @@ function renderTasks() {
     updateProductivityText();
     refreshIcons();
 }
-
 function addNewTask() {
     const taskText = prompt("Task:");
     if (taskText) {
@@ -401,24 +359,20 @@ function addNewTask() {
         saveAndRefresh();
     }
 }
-
 function toggleTask(id) {
     tasks = tasks.map(task => 
         task.id === id ? { ...task, done: !task.done, updatedAt: Date.now() } : task
     );
     saveAndRefresh();
 }
-
 function deleteTask(id) {
     tasks = tasks.filter(task => task.id !== id);
     saveAndRefresh();
 }
-
 function clearCompletedTasks() {
     tasks = tasks.filter(task => !task.done);
     saveAndRefresh();
 }
-
 function renderEvents() {
     const container = document.getElementById('upcomingEventsList');
     container.innerHTML = '';
@@ -445,7 +399,6 @@ function renderEvents() {
     });
     document.getElementById('totalEventsCount').innerText = events.length;
 }
-
 function addNewEvent() {
     const title = prompt("Event Name:");
     if (!title) return;
@@ -472,19 +425,16 @@ function addNewEvent() {
         saveAndRefresh();
     }
 }
-
 function deleteEvent(id) {
     events = events.filter(event => event.id !== id);
     saveAndRefresh();
 }
-
 function updateProductivityText() {
     const total = tasks.length;
     const done = tasks.filter(t => t.done).length;
     const pending = total - done;
     const textElement = document.getElementById('productiveCount');
     const progressBar = document.getElementById('taskProgressBar');
-    
     if (pending === 0 && total > 0) {
         textElement.innerText = "All caught up! ✨";
     } else if (total === 0) {
@@ -495,26 +445,20 @@ function updateProductivityText() {
     const percentage = total === 0 ? 0 : (done / total) * 100;
     progressBar.style.width = `${percentage}%`;
 }
-
 function updateNoteStats() {
     const activeNotes = notes.filter(n => !n.deleted);
     const totalNotes = activeNotes.length;
     const pinnedNotes = activeNotes.filter(n => n.pinned).length;
     const starredNotes = activeNotes.filter(n => n.starred).length;
     const trashNotes = notes.filter(n => n.deleted).length;
-    
     document.getElementById('totalNotesStat').innerText = totalNotes;
     document.getElementById('pinnedNotesStat').innerText = pinnedNotes;
     document.getElementById('starredNotesStat').innerText = starredNotes;
     document.getElementById('totalNotesCount').innerText = totalNotes;
-    
-    // Update trash count if you have a trash indicator in the sidebar
     const trashNavItem = document.querySelector('.nav-links a[onclick*="setView(\'trash\')"]');
     if (trashNavItem) {
-        // Find the trash icon and add count badge
         const trashIcon = trashNavItem.querySelector('i[data-lucide="trash-2"]');
         if (trashIcon) {
-            // Remove existing badge
             const existingBadge = trashIcon.parentNode.querySelector('.trash-badge');
             if (existingBadge) existingBadge.remove();
             
@@ -536,7 +480,6 @@ function updateNoteStats() {
         }
     }
 }
-
 function openNoteModal(noteId = null) {
     editingNoteId = noteId;
     const modal = document.getElementById('noteModal');
@@ -559,7 +502,6 @@ function openNoteModal(noteId = null) {
         tagInput.value = 'General';
         modalTitle.innerText = 'New Note';
     }
-    
     modal.style.display = 'flex';
     setTimeout(() => {
         modal.style.animation = 'fadeIn 0.3s ease-out';
@@ -567,7 +509,6 @@ function openNoteModal(noteId = null) {
     }, 10);
     refreshIcons();
 }
-
 function closeModal() {
     const modal = document.getElementById('noteModal');
     modal.style.animation = 'fadeIn 0.3s ease-out reverse';
@@ -576,7 +517,6 @@ function closeModal() {
         editingNoteId = null;
     }, 300);
 }
-
 function openSettings() {
     const modal = document.getElementById('settingsModal');
     const nameInput = document.getElementById('userNameInput');
@@ -593,7 +533,6 @@ function openSettings() {
     }, 10);
     refreshIcons();
 }
-
 function closeSettingsModal() {
     const modal = document.getElementById('settingsModal');
     modal.style.animation = 'fadeIn 0.3s ease-out reverse';
@@ -601,7 +540,6 @@ function closeSettingsModal() {
         modal.style.display = 'none';
     }, 300);
 }
-
 function saveSettings() {
     const nameInput = document.getElementById('userNameInput');
     const autoSaveSelect = document.getElementById('autoSaveInterval');
@@ -619,7 +557,6 @@ function saveSettings() {
     setView(defaultViewSelect.value);
     closeSettingsModal();
 }
-
 function saveNote() {
     const titleInput = document.getElementById('noteTitle');
     const contentInput = document.getElementById('noteContent');
@@ -660,11 +597,9 @@ function saveNote() {
             deletedAt: null
         });
     }
-    
     saveAndRefresh();
     closeModal();
 }
-
 function quickAdd(type) {
     if (type === 'note') {
         openNoteModal();
@@ -672,7 +607,6 @@ function quickAdd(type) {
         addNewTask();
     }
 }
-
 function exportData() {
     const data = {
         notes,
@@ -693,7 +627,6 @@ function exportData() {
     
     alert('Data exported successfully!');
 }
-
 function importData() {
     const input = document.createElement('input');
     input.type = 'file';
@@ -722,7 +655,6 @@ function importData() {
     };
     input.click();
 }
-
 function logout() {
     if (confirm('Are you sure you want to logout?')) {
         localStorage.removeItem('notetaker-user');
@@ -731,7 +663,6 @@ function logout() {
         alert('Logged out successfully!');
     }
 }
-
 function setupAutoSave() {
     if (autoSaveTimer) {
         clearInterval(autoSaveTimer);
@@ -744,7 +675,6 @@ function setupAutoSave() {
         }, interval);
     }
 }
-
 function saveAndRefresh() {
     saveToLocalStorage();
     renderNotes();
@@ -752,30 +682,24 @@ function saveAndRefresh() {
     renderEvents();
     updateNoteStats();
 }
-
 function filterNotes() {
     const searchTerm = document.getElementById('searchInput').value;
     renderNotes(searchTerm);
 }
-
 window.addEventListener('DOMContentLoaded', () => {
     const savedColor = localStorage.getItem('notetaker-theme');
     const savedUser = localStorage.getItem('notetaker-user');
     const savedDefaultView = localStorage.getItem('notetaker-default-view') || 'all';
-    
     if (savedColor) changeBg(savedColor);
     if (savedUser) {
         document.getElementById('userName').innerText = `Welcome back, ${savedUser} 👋`;
     }
-    
     updateClock();
     setInterval(updateClock, 1000);
-    
     setupAutoSave();
     setView(savedDefaultView);
     saveAndRefresh();
     refreshIcons();
-    
     const backToTop = document.getElementById('backToTop');
     window.addEventListener('scroll', () => {
         if (window.pageYOffset > 300) {
@@ -784,7 +708,6 @@ window.addEventListener('DOMContentLoaded', () => {
             backToTop.classList.remove('visible');
         }
     });
-    
     backToTop.addEventListener('click', (e) => {
         e.preventDefault();
         window.scrollTo({
@@ -792,19 +715,15 @@ window.addEventListener('DOMContentLoaded', () => {
             behavior: 'smooth'
         });
     });
-    
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeModal();
             closeSettingsModal();
         }
     });
-    
     document.querySelectorAll('.nav-section').forEach((section, index) => {
         section.style.animationDelay = `${index * 0.1}s`;
     });
-    
-    // Expose functions to global scope
     window.setView = setView;
     window.changeBg = changeBg;
     window.openNoteModal = openNoteModal;
