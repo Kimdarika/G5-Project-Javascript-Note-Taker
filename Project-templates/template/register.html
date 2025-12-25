@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Register | Note Taker</title>
+
+		<!-- Fonts & Icons -->
+		<link
+			href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+			rel="stylesheet"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+		/>
+
+		<!-- Page Styles -->
+		<link rel="stylesheet" href="../static/Css/auth.css" />
+	</head>
+	<body>
+		<main class="container">
+			<div class="logo">
+				<i class="fas fa-sticky-note"></i>
+				<h1>Note Taker</h1>
+			</div>
+
+			<section class="card" aria-labelledby="registerHeading">
+				<div class="card-header">
+					<h2 id="registerHeading">Create your account</h2>
+					<p>Join Note Taker to capture ideas, tasks, and everything in between.</p>
+				</div>
+
+				<!-- Alert container (JS will inject messages here) -->
+				<div id="alertContainer" aria-live="polite"></div>
+
+				<form id="registerForm" novalidate>
+					<div class="form-group">
+						<label for="fullName">Full name</label>
+						<div class="input-with-icon">
+							<i class="fas fa-user"></i>
+							<input id="fullName" name="fullName" type="text" placeholder="Jane Doe" required />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="email">Email</label>
+						<div class="input-with-icon">
+							<i class="fas fa-envelope"></i>
+							<input id="email" name="email" type="email" placeholder="you@company.com" required />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="password">Password</label>
+						<div class="input-with-icon">
+							<i class="fas fa-lock"></i>
+							<input id="password" name="password" type="password" placeholder="At least 6 characters" required />
+							<button type="button" class="password-toggle" aria-label="Toggle password visibility" onclick="window.passwordUtils.togglePassword('password')">
+								<i class="fas fa-eye"></i>
+							</button>
+						</div>
+						<div class="password-strength">
+							<div id="strengthMeter" class="strength-meter"></div>
+						</div>
+						<div id="strengthText" class="strength-text">Password strength: </div>
+					</div>
+
+					<div class="form-group">
+						<label for="confirmPassword">Confirm Password</label>
+						<div class="input-with-icon">
+							<i class="fas fa-lock"></i>
+							<input id="confirmPassword" name="confirmPassword" type="password" placeholder="Repeat password" required />
+							<button type="button" class="password-toggle" aria-label="Toggle repeat password visibility" onclick="window.passwordUtils.togglePassword('confirmPassword')">
+								<i class="fas fa-eye"></i>
+							</button>
+						</div>
+					</div>
+
+					<div class="form-group remember-forgot">
+						<label class="remember">
+							<input type="checkbox" id="terms" />
+							I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>
+						</label>
+					</div>
+
+					<button type="submit" class="btn btn-primary">Create account</button>
+
+					<div class="social-login">
+						<div class="social-title">Or sign up with</div>
+						<div class="social-buttons">
+							<button type="button" class="btn btn-social"><i class="fab fa-google"></i> Google</button>
+							<button type="button" class="btn btn-social"><i class="fab fa-github"></i> GitHub</button>
+						</div>
+					</div>
+
+					<div class="links">
+						<p>Already have an account? <a href="login.html">Sign in</a></p>
+					</div>
+				</form>
+			</section>
+
+			<footer class="footer">
+				<p>&copy; <span id="year"></span> Note Taker. All rights reserved.</p>
+			</footer>
+		</main>
+
+		<script>
+			document.getElementById('year').textContent = new Date().getFullYear();
+		</script>
+		<script src="../static/JS/auth.js"></script>
+	</body>
+</html>
+
