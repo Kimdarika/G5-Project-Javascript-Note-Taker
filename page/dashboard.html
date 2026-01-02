@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexus Notes | Modern Note Taking App</title>
+    <!-- External CSS Libraries -->
+    <link rel="stylesheet" href="/css/footer.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css" />
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/dashboard.css" />
+    
+    <!-- External Scripts (Head) -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://unpkg.com/docx@7.8.1/build/index.js"></script>
+  </head>
+  
+  <body>
+    <!-- ========== MAIN APP CONTAINER ========== -->
+    <div class="app-container" id="appContainer" style="display: none">
+      
+      <!-- SIDEBAR -->
+      <div class="sidebar" id="sidebar">
+        <!-- Sidebar Toggle -->
+        <div class="toggle-sidebar" id="toggleSidebar">
+          <i class="fas fa-chevron-left"></i>
+        </div>
+
+        <!-- Logo -->
+        <div class="logo">
+          <div class="logo-icon">
+            <i class="fas fa-sticky-note"></i>
+          </div>
+          <div class="logo-text">Note Taker</div>
+        </div>
+
+        <!-- Categories Section -->
+        <div class="category-list">
+          <div class="section-title">Categories</div>
+          <div class="category-item active" data-category="all">
+            <div class="category-icon all">
+              <i class="fas fa-inbox"></i>
+            </div>
+            <span class="category-text">All Notes</span>
+          </div>
+          <div class="category-item" data-category="personal">
+            <div class="category-icon personal">
+              <i class="fas fa-user"></i>
+            </div>
+            <span class="category-text">Personal</span>
+          </div>
+          <div class="category-item" data-category="work">
+            <div class="category-icon work">
+              <i class="fas fa-briefcase"></i>
+            </div>
+            <span class="category-text">Work</span>
+          </div>
+          <div class="category-item" data-category="ideas">
+            <div class="category-icon ideas">
+              <i class="fas fa-lightbulb"></i>
+            </div>
+            <span class="category-text">Ideas</span>
+          </div>
+          <div class="category-item" data-category="todo">
+            <div class="category-icon todo">
+              <i class="fas fa-tasks"></i>
+            </div>
+            <span class="category-text">To-Do</span>
+            <span class="trash-count" id="todoCount" style="display: none">0</span>
+          </div>
+          <div class="category-item" data-category="trash">
+            <div class="category-icon trash">
+              <i class="fas fa-trash"></i>
+            </div>
+            <span class="category-text">Trash</span>
+            <span class="trash-count" id="trashCount" style="display: none">0</span>
+          </div>
+        </div>
+
+        <!-- Tags Section -->
+        <div class="tag-list">
+          <div class="section-title">Tags</div>
+          <div class="tag-item" data-tag="important">
+            <div class="tag-icon">
+              <i class="fas fa-star"></i>
+            </div>
+            <span class="tag-text">Important</span>
+          </div>
+          <div class="tag-item" data-tag="meeting">
+            <div class="tag-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <span class="tag-text">Meeting</span>
+          </div>
+          <div class="tag-item" data-tag="project">
+            <div class="tag-icon">
+              <i class="fas fa-project-diagram"></i>
+            </div>
+            <span class="tag-text">Project</span>
+          </div>
+          <div class="tag-item" data-tag="ideas">
+            <div class="tag-icon">
+              <i class="fas fa-lightbulb"></i>
+            </div>
+            <span class="tag-text">Ideas</span>
+          </div>
+        </div>
+
+        <!-- New Note Button -->
+        <button class="new-note-btn" id="newNoteBtn">
+          <i class="fas fa-plus-circle"></i>
+          <span class="new-note-text">New Note</span>
+        </button>
+
+        <!-- User Info -->
+        <div class="user-info" id="userInfo">
+          <div class="user-avatar" id="userAvatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="user-details">
+            <div class="user-name" id="userName">Guest User</div>
+          </div>
+        </div>
+      </div>
+      <!-- END SIDEBAR -->
+
+      <!-- ========== MAIN CONTENT ========== -->
+      <div class="main-content">
+        
+        <!-- TOP BAR -->
+        <div class="top-bar">
+          <!-- Search -->
+          <div class="search-container">
+            <div class="search-box">
+              <i class="fas fa-search"></i>
+              <input type="text" id="searchInput" placeholder="Search notes..." />
+            </div>
+          </div>
+
+          <!-- Statistics -->
+          <div class="stats-container">
+            <div class="stat-item">
+              <div class="stat-icon notes">
+                <i class="fas fa-sticky-note"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="totalNotes">0</h3>
+                <p>Total Notes</p>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon pinned">
+                <i class="fas fa-thumbtack"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="pinnedNotes">0</h3>
+                <p>Pinned</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="top-bar-actions">
+            <button class="btn btn-secondary" id="themeToggleBtn">
+              <i class="fas fa-moon"></i>
+              <span>Dark Mode</span>
+            </button>
+            <button class="btn btn-secondary" id="exportBtn">
+              <i class="fas fa-download"></i> Export
+            </button>
+            <button class="btn btn-outline-danger" id="logoutBtn" style="display: none">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </div>
+        </div>
+        <!-- END TOP BAR -->
+
+        <!-- NOTES GRID -->
+        <div class="notes-grid" id="notesGrid">
+          <!-- Notes will be added here dynamically -->
+        </div>
+
+        <!-- TO-DO PANEL -->
+        <div class="task-panel" id="taskPanel" style="display: none">
+          <div class="task-panel-header">
+            <h2>To-Do Lists</h2>
+            <button class="btn btn-primary" id="createTodoBtn">
+              <i class="fas fa-plus-circle"></i> New To-Do List
+            </button>
+          </div>
+
+          <!-- To-Do Statistics -->
+          <div class="task-stats">
+            <div class="stat-item">
+              <div class="stat-icon">
+                <i class="fas fa-tasks"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="totalTasks">0</h3>
+                <p>Total Tasks</p>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="completedTasks">0</h3>
+                <p>Completed</p>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="pendingTasks">0</h3>
+                <p>Pending</p>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444">
+                <i class="fas fa-exclamation-circle"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="overdueTasks">0</h3>
+                <p>Overdue</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- To-Do List Container -->
+          <div class="todo-list-container" id="todoListContainer">
+            <!-- To-Do lists will be added here dynamically -->
+          </div>
+        </div>
+        <!-- END TO-DO PANEL -->
+
+        <!-- TRASH CONTAINER -->
+        <div class="trash-container" id="trashContainer" style="display: none">
+          <!-- Trash content will be added here dynamically -->
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div class="empty-state" id="emptyState" style="display: none">
+          <div class="empty-icon">
+            <i class="fas fa-sticky-note"></i>
+          </div>
+          <h3>No notes found</h3>
+          <p class="text-secondary">
+            Create your first note by clicking the "New Note" button
+          </p>
+          <button class="btn btn-primary mt-3" id="createFirstNoteBtn">
+            <i class="fas fa-plus-circle"></i> Create Your First Note
+          </button>
+        </div>
+        <!-- END EMPTY STATE -->
+      </div>
+      <!-- END MAIN CONTENT -->
+
+      <!-- ========== MODALS ========== -->
+      
+      <!-- NOTE EDITOR MODAL -->
+      <div class="editor-modal" id="editorModal">
+        <div class="editor-container">
+          <div class="editor-header">
+            <h2 class="editor-title" id="editorTitle">New Note</h2>
+            <button class="note-action-btn" id="closeEditorBtn">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <div class="editor-body">
+            <form id="noteForm">
+              <div class="form-group">
+                <input type="text" class="form-control" id="noteTitle" placeholder="Note Title" required />
+              </div>
+
+              <div class="form-group">
+                <div id="editor"></div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <select class="form-control" id="noteCategory">
+                      <option value="personal">Personal</option>
+                      <option value="work">Work</option>
+                      <option value="ideas">Ideas</option>
+                      <option value="todo">To-Do</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="noteTags" placeholder="Add tags (comma separated)" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-check mb-3">
+                <input type="checkbox" class="form-check-input" id="notePinned" />
+                <label class="form-check-label" for="notePinned">
+                  Pin this note
+                </label>
+              </div>
+            </form>
+          </div>
+
+          <div class="editor-footer">
+            <button class="btn btn-secondary" id="cancelNoteBtn">Cancel</button>
+            <div>
+              <button class="btn btn-primary" id="saveNoteBtn">
+                <i class="fas fa-save"></i> Save Note
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- END NOTE EDITOR MODAL -->
+
+      <!-- TO-DO EDITOR MODAL -->
+      <div class="editor-modal" id="todoEditorModal">
+        <div class="editor-container">
+          <div class="editor-header">
+            <h2 class="editor-title" id="todoEditorTitle">New To-Do List</h2>
+            <button class="note-action-btn" id="closeTodoBtn">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <div class="editor-body">
+            <form id="todoForm">
+              <div class="form-group">
+                <input type="text" class="form-control" id="todoTitle" placeholder="To-Do List Title" required />
+              </div>
+
+              <div class="form-group">
+                <textarea class="form-control" id="todoDescription" placeholder="Description (optional)" rows="2"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label>Tasks</label>
+                <div class="todo-list-editor" id="todoListEditor">
+                  <!-- Tasks will be added here dynamically -->
+                </div>
+                <button type="button" class="btn btn-outline-secondary btn-sm mt-2" id="addTaskBtn">
+                  <i class="fas fa-plus"></i> Add Task
+                </button>
+              </div>
+
+              <div class="form-check mb-3">
+                <input type="checkbox" class="form-check-input" id="todoPinned" />
+                <label class="form-check-label" for="todoPinned">
+                  Pin this to-do list
+                </label>
+              </div>
+            </form>
+          </div>
+
+          <div class="editor-footer">
+            <button class="btn btn-secondary" id="cancelTodoBtn">Cancel</button>
+            <div>
+              <button class="btn btn-primary" id="saveTodoBtn">
+                <i class="fas fa-save"></i> Save To-Do List
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- END TO-DO EDITOR MODAL -->
+
+      <!-- EXPORT MODAL -->
+      <div class="export-modal" id="exportModal">
+        <div class="export-container">
+          <div class="export-header">
+            <h2 class="export-title">Export Notes</h2>
+            <button class="note-action-btn" id="closeExportBtn">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="export-body">
+            <div class="export-options">
+              <div class="export-option" data-format="pdf" tabindex="0" role="button">
+                <div class="export-icon pdf">
+                  <i class="fas fa-file-pdf"></i>
+                </div>
+                <div class="export-info">
+                  <h4>PDF Format</h4>
+                  <p>Export as PDF document</p>
+                </div>
+              </div>
+              <div class="export-option" data-format="txt" tabindex="0" role="button">
+                <div class="export-icon txt">
+                  <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="export-info">
+                  <h4>Text Format</h4>
+                  <p>Export as plain text file</p>
+                </div>
+              </div>
+              <div class="export-option" data-format="docx" tabindex="0" role="button">
+                <div class="export-icon docx">
+                  <i class="fas fa-file-word"></i>
+                </div>
+                <div class="export-info">
+                  <h4>Word Format</h4>
+                  <p>Export as Microsoft Word document</p>
+                </div>
+              </div>
+              <div class="export-option" data-format="json" tabindex="0" role="button">
+                <div class="export-icon json">
+                  <i class="fas fa-file-code"></i>
+                </div>
+                <div class="export-info">
+                  <h4>JSON Format</h4>
+                  <p>Export as JSON data for backup</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="export-settings">
+              <div class="form-group">
+                <label for="exportFormatSelect">Format</label>
+                <select id="exportFormatSelect" class="form-control">
+                  <option value="pdf">PDF</option>
+                  <option value="docx">Word (DOCX)</option>
+                  <option value="txt">Text (TXT)</option>
+                  <option value="json">JSON</option>
+                </select>
+              </div>
+              <div class="form-check mb-3">
+                <input type="checkbox" class="form-check-input" id="exportAll" checked />
+                <label class="form-check-label" for="exportAll">
+                  Export all notes
+                </label>
+              </div>
+              <div class="form-check mb-3">
+                <input type="checkbox" class="form-check-input" id="includeMetadata" checked />
+                <label class="form-check-label" for="includeMetadata">
+                  Include metadata (tags, category, dates)
+                </label>
+              </div>
+              <div class="form-group">
+                <label for="exportFileName">File Name</label>
+                <input type="text" class="form-control" id="exportFileName" value="nexus-notes-export" placeholder="Enter file name" />
+              </div>
+              <div class="export-actions">
+                <button type="button" class="btn btn-cancel" id="cancelExportBtn">Cancel</button>
+                <button type="button" class="btn btn-primary" id="startExportBtn">
+                  <i class="fas fa-download"></i> Export Notes
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="export-footer" style="display: none"></div>
+        </div>
+      </div>
+      <!-- END EXPORT MODAL -->
+    </div>
+    <!-- END MAIN APP CONTAINER -->
+
+    <!-- ========== COLOR CUSTOMIZER ========== -->
+    <div class="color-customizer" id="colorCustomizer">
+      <div class="customizer-header">
+        <h3><i data-lucide="palette"></i> Theme Colors</h3>
+        <button class="close-customizer" onclick="toggleCustomizer()">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      
+      <div class="color-options" id="colorOptions">
+        <!-- Color options will be generated by JavaScript -->
+      </div>
+      
+      <div class="custom-color-picker">
+        <h4>Custom Colors</h4>
+        <div class="color-input-group">
+          <label>Primary:</label>
+          <input type="color" id="primaryColorPicker" value="#30bb09">
+          <input type="text" id="primaryColorText" value="#30bb09" placeholder="#30bb09">
+        </div>
+        <div class="color-input-group">
+          <label>Accent:</label>
+          <input type="color" id="accentColorPicker" value="#30bb09">
+          <input type="text" id="accentColorText" value="#30bb09" placeholder="#30bb09">
+        </div>
+        <div class="color-input-group">
+          <label>Secondary:</label>
+          <input type="color" id="secondaryColorPicker" value="#30bb09">
+          <input type="text" id="secondaryColorText" value="#30bb09" placeholder="#30bb09">
+        </div>
+        <div class="color-input-group">
+          <label>BG Color 1:</label>
+          <input type="color" id="bgColor1Picker" value="#000112">
+          <input type="text" id="bgColor1Text" value="#000112" placeholder="#000112">
+        </div>
+        <div class="color-input-group">
+          <label>BG Color 2:</label>
+          <input type="color" id="bgColor2Picker" value="#080336">
+          <input type="text" id="bgColor2Text" value="#080336" placeholder="#080336">
+        </div>
+        <div class="color-input-group">
+          <label>BG Color 3:</label>
+          <input type="color" id="bgColor3Picker" value="#02022a">
+          <input type="text" id="bgColor3Text" value="#02022a" placeholder="#02022a">
+        </div>
+      </div>
+      
+      <div class="color-preview">
+        <div class="preview-item preview-primary" title="Primary Color"></div>
+        <div class="preview-item preview-accent" title="Accent Color"></div>
+        <div class="preview-item preview-secondary" title="Secondary Color"></div>
+        <div class="preview-item preview-bg1" title="Background Color 1"></div>
+        <div class="preview-item preview-bg2" title="Background Color 2"></div>
+        <div class="preview-item preview-bg3" title="Background Color 3"></div>
+      </div>
+      
+      <div class="preset-colors">
+        <h4>Color Presets</h4>
+        <div class="preset-grid" id="presetColors">
+          <!-- Preset colors will be generated by JavaScript -->
+        </div>
+      </div>
+      
+      <div class="customizer-actions">
+        <button class="reset-colors" onclick="resetColors()">Reset</button>
+        <button class="apply-colors" onclick="applyCustomColors()">Apply Colors</button>
+      </div>
+    </div>
+
+    <!-- Customizer Toggle Button -->
+    <div class="customizer-toggle" id="customizerToggle" onclick="toggleCustomizer()">
+      <i data-lucide="palette"></i>
+    </div>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+      <!-- Floating Notes Background -->
+      <div class="floating-note" style="left: 10%; animation-delay: 0s;"></div>
+      <div class="floating-note" style="left: 25%; animation-delay: -3s;"></div>
+      <div class="floating-note" style="left: 45%; animation-delay: -6s;"></div>
+      <div class="floating-note" style="left: 65%; animation-delay: -9s;"></div>
+      <div class="floating-note" style="left: 85%; animation-delay: -12s;"></div>
+      
+      <div class="footer-container">
+        <!-- Footer Top Section -->
+        <div class="footer-top">
+          <!-- About Section -->
+          <div class="footer-about">
+            <div class="logo-carousel">
+              <img class="logo-footer" src="/image/rika.png" alt="Note Taker Logo 1" loading="lazy" />
+              <img class="logo-footer" src="/image/Vin.png" alt="Note Taker Logo 2" loading="lazy" />
+              <img class="logo-footer" src="/image/makara.png" alt="Note Taker Logo 3" loading="lazy" />
+            </div>
+            <p>
+              NoteTaker Pro is a powerful web-based application that allows users to create, edit, delete, and organize their notes efficiently. Collaborate with teams, customize your workspace, and never forget an idea again.
+            </p>
+            
+            <!-- Newsletter -->
+            <div class="newsletter">
+              <div class="newsletter-form">
+                <input type="email" id="newsletterEmail" placeholder="Enter your email for updates" aria-label="Email for newsletter">
+                <button onclick="subscribeNewsletter()">Subscribe</button>
+              </div>
+            </div>
+            
+            <!-- Social Icons -->
+            <div class="social-icons">
+              <a href="#" class="social-icon" onclick="openSocial('facebook')" aria-label="Facebook">
+                <i data-lucide="facebook"></i>
+              </a>
+              <a href="#" class="social-icon" onclick="openSocial('twitter')" aria-label="Twitter">
+                <i data-lucide="twitter"></i>
+              </a>
+              <a href="#" class="social-icon" onclick="openSocial('instagram')" aria-label="Instagram">
+                <i data-lucide="instagram"></i>
+              </a>
+              <a href="#" class="social-icon" onclick="openSocial('linkedin')" aria-label="LinkedIn">
+                <i data-lucide="linkedin"></i>
+              </a>
+              <a href="#" class="social-icon" onclick="openSocial('github')" aria-label="GitHub">
+                <i data-lucide="github"></i>
+              </a>
+            </div>
+          </div>
+          
+          <!-- Footer Links -->
+          <div class="footer-links">
+            <!-- Column 1: Note Taker Pages -->
+            <div class="footer-column">
+              <h3>Note Taker Pages</h3>
+              <ul>
+                <li><a href="#" onclick="setView('dashboard')">Dashboard</a></li>
+                <li><a href="#" onclick="setView('workspace')">Workspace</a></li>
+                <li><a href="#" onclick="openSettings()">Appearance Settings</a></li>
+                <li><a href="#" onclick="openProfile()">Edit Profile</a></li>
+                <li><a href="#" onclick="logout()">Login / Logout</a></li>
+              </ul>
+            </div>
+            
+            <!-- Column 2: Menu Pages -->
+            <div class="footer-column">
+              <h3>Menu Pages</h3>
+              <ul>
+                <li><a href="#" onclick="setView('overview')">Overview</a></li>
+                <li><a href="#" onclick="setView('dashboard')">Dashboard</a></li>
+                <li><a href="#" onclick="setView('notebooks')">Notebooks</a></li>
+                <li><a href="#" onclick="setView('starred')">Starred Notes</a></li>
+                <li><a href="#" onclick="setView('tags')">Tags & Filters</a></li>
+              </ul>
+            </div>
+            
+            <!-- Column 3: Workspace -->
+            <div class="footer-column">
+              <h3>Workspace</h3>
+              <ul>
+                <li><a href="#" onclick="setView('team')">Team Space</a></li>
+                <li><a href="#" onclick="setView('archive')">Archive</a></li>
+                <li><a href="#" onclick="setView('trash')">Trash</a></li>
+                <li><a href="#" onclick="setView('shared')">Shared Notes</a></li>
+                <li><a href="#" onclick="setView('templates')">Templates</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+          <p>Copyright © 2024 – NoteTaker Premium. All Rights Reserved.</p>
+          <div class="bottom-links">
+            <a href="#" onclick="openTerms()">Terms of Service</a>
+            <a href="#" onclick="openPrivacy()">Privacy Policy</a>
+            <a href="#" onclick="openSupport()">Support Center</a>
+            <a href="#" onclick="openContact()">Contact Us</a>
+            <a href="#" onclick="openCookies()">Cookie Policy</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top" id="backToTop" aria-label="Back to top">
+      <i data-lucide="arrow-up"></i>
+    </a>
+
+    <!-- ========== EXTERNAL SCRIPTS (BOTTOM) ========== -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script src="/js/dashboard.js"></script>
+    <script src="/js/footer.js"></script>
+    
+  </body>
+</html>

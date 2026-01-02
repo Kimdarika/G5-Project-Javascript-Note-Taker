@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NoteTaker | Premium Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="/css/index.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon"></div>
+        NoteTaker.
+      </div>
+
+      <div class="nav-section">
+        <p class="nav-label">Menu</p>
+        <ul class="nav-links">
+          <li>
+            <a href="#" class="active" onclick="setView('all')"
+              ><i data-lucide="layout-dashboard"></i> Overview</a
+            >
+          </li>
+          <li>
+            <a href="/page/dashboard.html" onclick="setView('recent')"
+              ><i data-lucide="history"></i>Dashboard</a
+            >
+          </li>
+          <li>
+            <a href="/page/notebook.html" onclick="setView('notebooks')"
+              ><i data-lucide="folder"></i> Notebooks</a
+            >
+          </li>
+          <li>
+            <a href="#starredNotesStat" onclick="setView('starred')"
+              ><i data-lucide="star"></i> Starred</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="nav-section">
+        <p class="nav-label">Workspace</p>
+        <ul class="nav-links">
+          <li>
+            <a href="/page/teamspace.html" onclick="setView('team')"
+              ><i data-lucide="users"></i> Team Space</a
+            >
+          </li>
+          <li>
+            <a href="#" onclick="setView('archive')"
+              ><i data-lucide="archive"></i> Archive</a
+            >
+          </li>
+          <li>
+            <a href="#" onclick="setView('trash')"
+              ><i data-lucide="trash-2"></i> Trash</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="nav-section">
+        <p class="nav-label">Appearance</p>
+        <div class="theme-picker">
+          <div class="color-options">
+            <button
+              class="color-btn"
+              style="background: #ffffff"
+              onclick="changeBg('#ffffff', this)"
+            ></button>
+            <button
+              class="color-btn"
+              style="background: #0f172a"
+              onclick="changeBg('#0f172a', this)"
+            ></button>
+            <button
+              class="color-btn"
+              style="background: #1e1b4b"
+              onclick="changeBg('#1e1b4b', this)"
+            ></button>
+            <button
+              class="color-btn"
+              style="background: #064e3b"
+              onclick="changeBg('#064e3b', this)"
+            ></button>
+            <button
+              class="color-btn"
+              style="background: #450a0a"
+              onclick="changeBg('#450a0a', this)"
+            ></button>
+            <button
+              class="color-btn"
+              style="background: #3f2b1c"
+              onclick="changeBg('#3f2b1c', this)"
+            ></button>
+            <button
+              class="color-btn"
+              style="background: #1c1917"
+              onclick="changeBg('#1c1917', this)"
+            ></button>
+            <button
+              class="color-btn"
+              style="background: #2e1065"
+              onclick="changeBg('#2e1065', this)"
+            ></button>
+          </div>
+          <div class="custom-color-wrapper">
+            <input
+              type="color"
+              id="customColor"
+              oninput="changeBg(this.value)"
+            />
+            <span class="custom-label">Custom Theme</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: auto; padding-top: 20px">
+        <ul class="nav-links">
+          <li>
+            <a href="#" onclick="openSettings()"
+              ><i data-lucide="settings"></i> Settings</a
+            >
+          </li>
+          <li>
+            <a href="/index.html" onclick="logout()" style="color: var(--danger)"
+              ><i data-lucide="log-out"></i> Logout</a
+            >
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <div id="noteModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modalTitle">New Note</h2>
+          <button class="close-modal" onclick="closeModal()">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="form-group">
+          <label for="noteTitle">Title</label>
+          <input type="text" id="noteTitle" placeholder="Enter note title..." />
+        </div>
+        <div class="form-group">
+          <label for="noteContent">Content</label>
+          <textarea
+            id="noteContent"
+            placeholder="Write your note here..."
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <label for="noteTag">Tag</label>
+          <select id="noteTag">
+            <option value="General">General</option>
+            <option value="Work">Work</option>
+            <option value="Personal">Personal</option>
+            <option value="Ideas">Ideas</option>
+            <option value="Study">Study</option>
+            <option value="Project">Project</option>
+            <option value="Meeting">Meeting</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+          <button class="btn-primary" onclick="saveNote()">Save Note</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="settingsModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Settings</h2>
+          <button class="close-modal" onclick="closeSettingsModal()">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="form-group">
+          <label for="userNameInput">Display Name</label>
+          <input
+            type="text"
+            id="userNameInput"
+            placeholder="Enter your name..."
+          />
+        </div>
+        <div class="form-group">
+          <label>Auto-save Interval (seconds)</label>
+          <select id="autoSaveInterval">
+            <option value="5">5 seconds</option>
+            <option value="10">10 seconds</option>
+            <option value="30" selected>30 seconds</option>
+            <option value="60">1 minute</option>
+            <option value="300">5 minutes</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Default Note View</label>
+          <select id="defaultView">
+            <option value="all">All Notes</option>
+            <option value="recent">Recent First</option>
+            <option value="starred">Starred Only</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button class="btn-secondary" onclick="closeSettingsModal()">
+            Cancel
+          </button>
+          <button class="btn-primary" onclick="saveSettings()">
+            Save Settings
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-wrapper">
+      <main class="main-content">
+        <header class="header">
+          <div class="search-container">
+            <i data-lucide="search"></i>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search notes, tasks, events..."
+              oninput="filterNotes()"
+            />
+          </div>
+          <div style="display: flex; gap: 15px; align-items: center">
+            <div id="digitalClock">00:00:00</div>
+            <div id="quickActions" style="display: flex; gap: 10px">
+              <button
+                class="btn-secondary"
+                onclick="exportData()"
+                title="Export Data"
+              >
+                <i data-lucide="download"></i>
+              </button>
+              <button
+                class="btn-secondary"
+                onclick="importData()"
+                title="Import Data"
+              >
+                <i data-lucide="upload"></i>
+              </button>
+            </div>
+            <button class="btn-primary" onclick="openNoteModal()">
+              <i data-lucide="plus"></i> New Note
+            </button>
+          </div>
+        </header>
+
+        <div class="grid-container">
+          <div class="left-col">
+            <div style="margin-bottom: 32px">
+              <h1 id="userName">Welcome back, Darika Kim 👋</h1>
+              <p style="color: var(--text-dim)" id="productiveCount">
+                Loading your progress...
+              </p>
+            </div>
+
+            <div class="quick-stats">
+              <div class="quick-stat-item">
+                <div class="quick-stat-value" id="totalNotesStat">0</div>
+                <div class="quick-stat-label">Total Notes</div>
+              </div>
+              <div class="quick-stat-item">
+                <div class="quick-stat-value" id="pinnedNotesStat">0</div>
+                <div class="quick-stat-label">Pinned</div>
+              </div>
+              <div class="quick-stat-item">
+                <div class="quick-stat-value" id="starredNotesStat">0</div>
+                <div class="quick-stat-label">Starred</div>
+              </div>
+            </div>
+
+            <div class="stat-group">
+              <div class="stat-card" onclick="setView('all')">
+                <h3>Total Notes</h3>
+                <div class="val" id="totalNotesCount">0</div>
+              </div>
+              <div class="stat-card" onclick="setView('tasks')">
+                <h3>Tasks</h3>
+                <div class="val" id="totalTasksCount">0</div>
+              </div>
+              <div class="stat-card" onclick="setView('upcoming')">
+                <h3>Events</h3>
+                <div class="val" id="totalEventsCount">0</div>
+              </div>
+            </div>
+
+            <h2 class="section-title" id="gridTitle">
+              <i data-lucide="pin" style="color: var(--primary)"></i> My Notes
+            </h2>
+            <div class="notes-masonry" id="notesGrid"></div>
+          </div>
+
+          <div class="right-col">
+            <div class="widget">
+              <div class="widget-title">
+                Tasks <i data-lucide="list-checks" style="width: 18px"></i>
+              </div>
+              <div class="progress-container">
+                <div class="progress-bar" id="taskProgressBar"></div>
+              </div>
+              <div id="todoList"></div>
+              <div style="display: flex; gap: 15px">
+                <button
+                  onclick="addNewTask()"
+                  style="
+                    background: none;
+                    border: none;
+                    color: var(--primary);
+                    font-size: 13px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    margin-top: 10px;
+                  "
+                >
+                  + Add new task
+                </button>
+                <button
+                  onclick="clearCompletedTasks()"
+                  style="
+                    background: none;
+                    border: none;
+                    color: var(--text-dim);
+                    font-size: 13px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    margin-top: 10px;
+                  "
+                >
+                  Clear Done
+                </button>
+              </div>
+            </div>
+
+            <div class="widget calendar-card" id="calendarWidget">
+              <div class="widget-title">
+                Upcoming <i data-lucide="calendar" style="width: 18px"></i>
+              </div>
+              <div id="upcomingEventsList"></div>
+              <button
+                onclick="addNewEvent()"
+                style="
+                  background: none;
+                  border: none;
+                  color: var(--primary);
+                  font-size: 13px;
+                  font-weight: 600;
+                  cursor: pointer;
+                  margin-top: 10px;
+                "
+              >
+                + Add Event
+              </button>
+            </div>
+
+            <div class="widget">
+              <div class="widget-title">
+                Quick Actions <i data-lucide="zap" style="width: 18px"></i>
+              </div>
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                  gap: 12px;
+                  margin-top: 16px;
+                "
+              >
+                <button
+                  class="btn-secondary"
+                  onclick="quickAdd('note')"
+                  style="padding: 12px; font-size: 13px"
+                >
+                  <i data-lucide="file-text" style="width: 16px"></i> Quick Note
+                </button>
+                <button
+                  class="btn-secondary"
+                  onclick="quickAdd('task')"
+                  style="padding: 12px; font-size: 13px"
+                >
+                  <i data-lucide="check-circle" style="width: 16px"></i> Quick
+                  Task
+                </button>
+                <button
+                  class="btn-secondary"
+                  onclick="setView('starred')"
+                  style="padding: 12px; font-size: 13px"
+                >
+                  <i data-lucide="star" style="width: 16px"></i> View Starred
+                </button>
+                <button
+                  class="btn-secondary"
+                  onclick="setView('pinned')"
+                  style="padding: 12px; font-size: 13px"
+                >
+                  <i data-lucide="pin" style="width: 16px"></i> View Pinned
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-about">
+          <div class="logo">
+            <img
+              class="logo-footer"
+              src="https://i.pinimg.com/1200x/a2/26/87/a226875eca382500fb6bd1ae20380d20.jpg"
+              alt="Portfolio Image 1"
+            />
+            <img
+              class="logo-footer"
+              src="https://i.pinimg.com/1200x/a2/26/87/a226875eca382500fb6bd1ae20380d20.jpg"
+              alt="Portfolio Image 2"
+            />
+            <img
+              class="logo-footer"
+              src="https://i.pinimg.com/1200x/a2/26/87/a226875eca382500fb6bd1ae20380d20.jpg"
+              alt="Portfolio Image 3"
+            />
+          </div>
+          <p>
+            The Note Taker App is a web-based application that allows users to
+            create, edit, delete, and organize their notes.
+          </p>
+          <!-- Social Media Icons -->
+          <div class="social-icons">
+            <a href="#" class="social-icon">
+              <i data-lucide="facebook"></i>
+            </a>
+            <a href="#" class="social-icon">
+              <i data-lucide="twitter"></i>
+            </a>
+            <a href="#" class="social-icon">
+              <i data-lucide="instagram"></i>
+            </a>
+            <a href="#" class="social-icon">
+              <i data-lucide="linkedin"></i>
+            </a>
+            <a href="#" class="social-icon">
+              <i data-lucide="github"></i>
+            </a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <div>
+            <h3>Note taker page</h3>
+            <ul>
+              <li><a href="#" onclick="setView('all')">Menu page</a></li>
+              <li><a href="#" onclick="setView('team')">Workspace page</a></li>
+              <li><a href="#" onclick="openSettings()">Appearance page</a></li>
+              <li>
+                <a href="#" onclick="openSettings()">Edit Profile page</a>
+              </li>
+              <li><a href="#" onclick="logout()">Login page</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Menu page</h3>
+            <ul>
+              <li><a href="#" onclick="setView('all')">Overview Page</a></li>
+              <li>
+                <a href="#" onclick="setView('recent')">Dashboard Page</a>
+              </li>
+              <li>
+                <a href="#" onclick="setView('notebooks')">Notebooks Page</a>
+              </li>
+              <li><a href="#" onclick="setView('starred')">Starred Page</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Workspace</h3>
+            <ul>
+              <li><a href="#" onclick="setView('team')">Team Space</a></li>
+              <li><a href="#" onclick="setView('archive')">Archive</a></li>
+              <li><a href="#" onclick="setView('trash')">Trash</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>Copyright © 2024 – NoteTaker Premium All Rights Reserved</p>
+          <div class="bottom-links">
+            <a href="#">Terms</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Support</a>
+            <a href="#">Contact</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <a href="#" class="back-to-top" id="backToTop">
+      <i data-lucide="arrow-up"></i>
+    </a>
+    <script src="../js/index.js"></script>
+  </body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Space</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/teamspace.css">
+    <script src="/js/teamspace.js"></script>
+
+</head>
+
+<body>
+    <header>
+        <div class="logo-group">
+            <div class="logo-icon"><i class="fas fa-rocket"></i></div>
+            <div class="logo-text">
+                <h1>Team Space</h1>
+
+            </div>
+        </div>
+        <div class="header-btns">
+            <button class="btn btn-primary" onclick="showModal()"><i class="fas fa-plus-circle"></i> New Update</button>
+            <button class="btn" onclick="toggleShare()"><i class="fas fa-share-alt"></i> Share</button>
+            <div class="share-menu" id="shareMenu">
+                <div class="share-item" onclick="shareVia('telegram')"><i class="fab fa-telegram"
+                        style="color:#0088cc"></i> Telegram</div>
+                <div class="share-item" onclick="shareVia('email')"><i class="fas fa-envelope"
+                        style="color:#ea4335"></i> Email</div>
+                <div class="share-item" onclick="shareVia('linkedin')"><i class="fab fa-linkedin"
+                        style="color:#0077b5"></i> LinkedIn</div>
+            </div>
+        </div>
+    </header>
+    <div class="layout">
+        <aside>
+            <div class="calendar-container">
+                <div class="calendar-month">January 2026</div>
+                <div class="calendar-grid">
+                    <div class="cal-day-label">M</div>
+                    <div class="cal-day-label">T</div>
+                    <div class="cal-day-label">W</div>
+                    <div class="cal-day-label">T</div>
+                    <div class="cal-day-label">F</div>
+                    <div class="cal-day-label">S</div>
+                    <div class="cal-day-label">S</div>
+                    <div class="cal-date">1</div>
+                    <div class="cal-date">2</div>
+                    <div class="cal-date">3</div>
+                    <div class="cal-date">4</div>
+                    <div class="cal-date">5</div>
+                    <div class="cal-date">6</div>
+                    <div class="cal-date">7</div>
+                    <div class="cal-date">15</div>
+                    <div class="cal-date">16</div>
+                    <div class="cal-date">17</div>
+                    <div class="cal-date">18</div>
+                    <div class="cal-date">19</div>
+                    <div class="cal-date">20</div>
+                    <div class="cal-date">21</div>
+                    <div class="cal-date">22</div>
+                    <div class="cal-date">23</div>
+                    <div class="cal-date active">24</div>
+                    <div class="cal-date">25</div>
+                    <div class="cal-date">26</div>
+                    <div class="cal-date">27</div>
+                    <div class="cal-date">28</div>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <h3>Calendar Notes</h3>
+                <div class="note-item" onclick="openNote('Daily')"><i class="far fa-calendar-check"
+                        style="color: var(--cal-orange);"></i> Daily</div>
+                <div class="note-item" onclick="openNote('Weekly')"><i class="far fa-calendar-alt"
+                        style="color: var(--cal-purple);"></i> Weekly</div>
+                <div class="note-item" onclick="openNote('Monthly')"><i class="far fa-calendar-minus"
+                        style="color: var(--cal-pink);"></i> Monthly</div>
+                <div class="note-item" onclick="openNote('Yearly')"><i class="far fa-calendar"
+                        style="color: var(--cal-green);"></i> Yearly</div>
+                <div class="note-item" onclick="openNote('7-Day')"><i class="far fa-calendar-times"
+                        style="color: var(--cal-red);"></i> 7-Day</div>
+            </div>
+
+            <div class="sidebar-section">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Team Members</h3>
+                    <i class="fas fa-user-plus" style="font-size: 0.8rem; cursor: pointer; color: var(--accent-blue);"
+                        onclick="showMemberModal()"></i>
+                </div>
+                <div id="member-list"></div>
+
+                <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 15px;">View member details</p>
+                <select class="member-select" id="member-details-select"
+                    onchange="if(this.value) openMemberProfile(this.value)">
+                    <option value="">Select a member</option>
+                </select>
+            </div>
+
+            <button class="trash-btn" onclick="showTrash()">
+                <i class="far fa-trash-alt"></i> Trash <span style="float:right" id="trash-count">0</span>
+            </button>
+        </aside>
+
+        <main>
+            <div class="view-title">
+                <i class="fas fa-th-large" style="color: var(--accent-blue);"></i>
+                <strong>Sprint Progress</strong>
+            </div>
+
+            <div class="kanban">
+                <div class="column" id="todo">
+                    <div class="col-header"><span>TO DO</span> <span class="count-pill" id="todo-count">0</span></div>
+                    <div class="task-list" id="todo-list"></div>
+                </div>
+                <div class="column" id="inprogress">
+                    <div class="col-header"><span>IN PROGRESS</span> <span class="count-pill"
+                            id="progress-count">0</span></div>
+                    <div class="task-list" id="progress-list"></div>
+                </div>
+                <div class="column" id="done">
+                    <div class="col-header"><span>DONE</span> <i class="fas fa-check-circle"
+                            style="color: #22c55e;"></i></div>
+                    <div class="task-list" id="done-list"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal" id="profileModal">
+        <div class="modal-content" style="width: 400px;">
+            <div class="profile-card" id="profileDetail">
+            </div>
+            <button class="btn" style="width: 100%; margin-top: 20px;"
+                onclick="document.getElementById('profileModal').style.display='none'">Close Profile</button>
+        </div>
+    </div>
+    <div class="modal" id="noteModal">
+        <div class="modal-content" style="width: 700px;">
+            <h3 id="noteType">Note</h3>
+            <div class="toolbar">
+                <select onchange="execCmd('fontSize', this.value)">
+                    <option value="3">Font Size</option>
+                    <option value="1">10</option>
+                    <option value="2">13</option>
+                    <option value="3">16</option>
+                    <option value="4">18</option>
+                    <option value="5">24</option>
+                    <option value="6">32</option>
+                </select>
+                <button onclick="execCmd('bold', null)"><i class="fas fa-bold"></i></button>
+                <button onclick="execCmd('italic', null)"><i class="fas fa-italic"></i></button>
+                <button onclick="execCmd('underline', null)"><i class="fas fa-underline"></i></button>
+                <button onclick="execCmd('strikethrough', null)"><i class="fas fa-strikethrough"></i></button>
+                <button onclick="execCmd('justifyLeft', null)"><i class="fas fa-align-left"></i></button>
+                <button onclick="execCmd('justifyCenter', null)"><i class="fas fa-align-center"></i></button>
+                <button onclick="execCmd('insertUnorderedList', null)"><i class="fas fa-list-ul"></i></button>
+                <button onclick="execCmd('insertOrderedList', null)" title="Numbered List"><i
+                        class="fas fa-list-ol"></i></button>
+                <button onclick="showColorPicker()" title="Text Color"><i class="fas fa-palette"></i></button>
+                <div id="colorPicker"
+                    style="display: none; position: absolute; background: white; padding: 10px; border: 1px solid #ddd; border-radius: 4px; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 220px;">
+                    <input type="color" id="textColor" onchange="applyColor(this.value)"
+                        style="border: none; width: 30px; height: 30px; padding: 0; vertical-align: middle; cursor: pointer; margin-bottom: 5px;">
+                    <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px;">
+                        <!-- Grayscale -->
+                        <button onclick="applyColor('#000000')" title="Black"
+                            style="background: #000000; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+                        <button onclick="applyColor('#333333')" title="Dark Gray"
+                            style="background: #333333; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+                        <button onclick="applyColor('#666666')" title="Gray"
+                            style="background: #666666; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+                        <button onclick="applyColor('#999999')" title="Light Gray"
+                            style="background: #999999; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+                        <button onclick="applyColor('#cccccc')" title="Very Light Gray"
+                            style="background: #cccccc; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+                        <button onclick="applyColor('#ffffff')" title="White"
+                            style="background: #ffffff; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+
+                        <!-- Red -->
+                        <button onclick="applyColor('#ff0000')" title="Red"
+                            style="background: #ff0000; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+                        <button onclick="applyColor('#ff6666')" title="Light Red"
+                            style="background: #ff6666; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+                        <button onclick="applyColor('#990000')" title="Dark Red"
+                            style="background: #990000; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+
+                        <!-- Green -->
+
+
+                        <button onclick="applyColor('#00aa00')" title="Green"
+                            style="background: #00aa00; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+                        <button onclick="applyColor('#66cc66')" title="Light Green"
+                            style="background: #66cc66; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+                        <button onclick="applyColor('#006600')" title="Dark Green"
+                            style="background: #006600; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+
+                        <!-- Blue -->
+                        <button onclick="applyColor('#0000ff')" title="Blue"
+                            style="background: #0000ff; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+                        <button onclick="applyColor('#6666ff')" title="Light Blue"
+                            style="background: #6666ff; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+                        <button onclick="applyColor('#000099')" title="Dark Blue"
+                            style="background: #000099; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+
+                        <!-- Yellow/Orange -->
+                        <button onclick="applyColor('#ffcc00')" title="Yellow"
+                            style="background: #ffcc00; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+                        <button onclick="applyColor('#ff9900')" title="Orange"
+                            style="background: #ff9900; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+                        <button onclick="applyColor('#ff6600')" title="Dark Orange"
+                            style="background: #ff6600; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+
+                        <!-- Purple/Pink -->
+                        <button onclick="applyColor('#9900cc')" title="Purple"
+                            style="background: #9900cc; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+                        <button onclick="applyColor('#cc99ff')" title="Light Purple"
+                            style="background: #cc99ff; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+                        <button onclick="applyColor('#ff00ff')" title="Pink"
+                            style="background: #ff00ff; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+
+                        <!-- Teal/Cyan -->
+                        <button onclick="applyColor('#00cccc')" title="Teal"
+                            style="background: #00cccc; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+                        <button onclick="applyColor('#66ffff')" title="Light Cyan"
+                            style="background: #66ffff; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+                        <button onclick="applyColor('#008080')" title="Dark Teal"
+                            style="background: #008080; width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer; border-radius: 3px;"></button>
+                    </div>
+                </div>
+                <button onclick="execCmd('removeFormat', null)" title="Clear Formatting"><i
+                        class="fas fa-eraser"></i></button>
+            </div>
+            <div id="noteEditor" class="editor-container" contenteditable="true"></div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top: 15px;">
+                <button class="btn" onclick="closeNote()">Close</button>
+                <button class="btn btn-primary" onclick="saveNote()">Save Note</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="memberModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; display: flex; justify-content: center; align-items: center;"
+        onclick="if(event.target === this) this.style.display='none'">
+        <div class="modal-content"
+            style="background: white; padding: 20px; border-radius: 8px; width: 90%; max-width: 500px; position: relative;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0;">Add New Member</h3>
+                <span class="close"
+                    onclick="event.stopPropagation(); document.getElementById('memberModal').style.display='none'; return false;"
+                    style="cursor: pointer; font-size: 24px; color: #666; position: absolute; right: 20px; top: 15px; z-index: 1001; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: #f5f5f5; border-radius: 50%; line-height: 1;">&times;</span>
+            </div>
+            <input type="text" id="memName" placeholder="Full Name"
+                style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            <input type="text" id="memRole" placeholder="Role"
+                style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            <input type="text" id="memTelegram" placeholder="Telegram Username (without @)"
+                style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            <input type="text" id="memPhone" placeholder="Phone Number"
+                style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            <input type="email" id="memEmail" placeholder="Email Address"
+                style="width: 100%; margin-bottom: 20px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn" onclick="hideModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="addMember()">Add Member</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <h3>Add Task</h3>
+            <input type="text" id="taskTitle" placeholder="Task Name">
+            <input type="text" id="taskAssignee" placeholder="Assignee">
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn" onclick="hideModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="addTask()">Add Task</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="trashModal">
+        <div class="modal-content">
+            <h3>Recycle Bin</h3>
+            <div id="trash-list" style="max-height: 300px; overflow-y: auto;"></div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top: 15px;">
+                <button class="btn" onclick="document.getElementById('trashModal').style.display='none'">Close</button>
+                <button class="btn btn-primary" style="background: var(--cal-red);" onclick="emptyTrash()">Empty
+                    Trash</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="teamChat" class="chat-container"
+        style="display:none; position:fixed; bottom:20px; right:20px; width:350px; height:450px; background:white; border-radius:15px; box-shadow:0 10px 30px rgba(0,0,0,0.2); flex-direction:column; z-index:2000;">
+        <div
+            style="background:var(--accent-blue, #0ea5e9); color:white; padding:15px; border-radius:15px 15px 0 0; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-weight:bold;"><i class="fab fa-telegram-plane"></i> Team Discussion</span>
+            <i class="fas fa-times" onclick="toggleChat()" style="cursor:pointer;"></i>
+        </div>
+        <div id="chatMessages"
+            style="flex:1; overflow-y:auto; padding:15px; display:flex; flex-direction:column; gap:10px; background:#f8fafc;">
+        </div>
+        <div style="padding:10px; border-top:1px solid #eee; display:flex; gap:5px;">
+            <input type="text" id="chatInput" placeholder="Write a message..."
+                style="flex:1; border:none; outline:none; padding:8px; border-radius:8px; background:#f1f5f9;">
+            <button onclick="sendChatMessage()"
+                style="background:var(--accent-blue, #0ea5e9); color:white; border:none; padding:8px 15px; border-radius:8px; cursor:pointer;"><i
+                    class="fas fa-paper-plane"></i></button>
+
+        </div>
+    </div>
+    <script src="./js/teamspace.js"></script>
+</body>
+
+</html>

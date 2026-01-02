@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Notebook</title>
+    <link rel="stylesheet" href="/css/note taker.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link rel="stylesheet" href="/css/footer.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <h1>Note Book</h1>
+            </div>
+            <div class="menu-section">
+                <h3>Quick Views</h3>
+                <a href="#" class="menu-item active" id="allNotes">
+                    <i class="fas fa-calendar-day"></i>
+                    <span>Today's Notes</span>
+                </a>
+                <a href="#" class="menu-item" id="pinnedNotes">
+                    <i class="fas fa-thumbtack"></i>
+                    <span>Pinned Notes</span>
+                </a>
+                <a href="#" class="menu-item" id="archivedNotes">
+                    <i class="fas fa-archive"></i>
+                    <span>Archived Notes</span>
+                </a>
+                <a href="#" class="menu-item" id="importantNotes">
+                    <i class="fas fa-star"></i>
+                    <span>Important Notes</span>
+                </a>
+            </div>
+            <div class="menu-section recent-folders">
+                <h3>Course Folders</h3>
+                <div class="folder-item active" data-folder="all">
+                    <i class="fas fa-folder"></i>
+                    <div class="folder-details">
+                        <div class="folder-name">All Courses</div>
+                        <div class="folder-count" id="allCount">0</div>
+                    </div>
+                </div>
+                <div class="folder-item" data-folder="web-design">
+                    <i class="fas fa-code"></i>
+                    <div class="folder-details">
+                        <div class="folder-name">Web Design</div>
+                        <div class="folder-count" id="webDesignCount">0</div>
+                    </div>
+                </div>
+                <div class="folder-item" data-folder="algorithm">
+                    <i class="fas fa-sitemap"></i>
+                    <div class="folder-details">
+                        <div class="folder-name">Algorithms</div>
+                        <div class="folder-count" id="algorithmCount">0</div>
+                    </div>
+                </div>
+                <div class="folder-item" data-folder="database">
+                    <i class="fas fa-database"></i>
+                    <div class="folder-details">
+                        <div class="folder-name">Database</div>
+                        <div class="folder-count" id="databaseCount">0</div>
+                    </div>
+                </div>
+                <div class="folder-item" data-folder="frontend">
+                    <i class="fas fa-paint-brush"></i>
+                    <div class="folder-details">
+                        <div class="folder-name">Frontend Dev</div>
+                        <div class="folder-count" id="frontendCount">0</div>
+                    </div>
+                </div>
+                <div class="folder-item" data-folder="backend">
+                    <i class="fas fa-server"></i>
+                    <div class="folder-details">
+                        <div class="folder-name">Backend Dev</div>
+                        <div class="folder-count" id="backendCount">0</div>
+                    </div>
+                </div>
+                <div class="folder-item" data-folder="general-english">
+                    <i class="fas fa-language"></i>
+                    <div class="folder-details">
+                        <div class="folder-name">General English</div>
+                        <div class="folder-count" id="generalEnglishCount">0</div>
+                    </div>
+                </div>
+                <div class="folder-item" data-folder="student-meeting">
+                    <i class="fas fa-users"></i>
+                    <div class="folder-details">
+                        <div class="folder-name">Group Projects</div>
+                        <div class="folder-count" id="studentMeetingCount">0</div>
+                    </div>
+                </div>
+                <div class="folder-item" data-folder="software-deployment">
+                    <i class="fas fa-rocket"></i>
+                    <div class="folder-details">
+                        <div class="folder-name">Deployment</div>
+                        <div class="folder-count" id="softwareDeploymentCount">0</div>
+                    </div>
+                </div>
+                <div class="folder-item" data-folder="professional-life">
+                    <i class="fas fa-briefcase"></i>
+                    <div class="folder-details">
+                        <div class="folder-name">Career Prep</div>
+                        <div class="folder-count" id="professionalLifeCount">0</div>
+                    </div>
+                </div>
+                <div class="folder-item" data-folder="english-for-it">
+                    <i class="fas fa-laptop-code"></i>
+                    <div class="folder-details">
+                        <div class="folder-name">IT English</div>
+                        <div class="folder-count" id="englishForItCount">0</div>
+                    </div>
+                </div>
+                <div class="folder-item" data-folder="design">
+                    <i class="fas fa-palette"></i>
+                    <div class="folder-details">
+                        <div class="folder-name">UI/UX Design</div>
+                        <div class="folder-count" id="designCount">0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="user-stats">
+                <h3>Your Statistics</h3>
+                <div class="stat-item">
+                    <div class="stat-label">Total Notes</div>
+                    <div class="stat-number" id="totalNotesStat">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Characters</div>
+                    <div class="stat-number" id="charCount">0</div>
+                </div>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <h2 class="page-title" id="currentView">Today's Notes</h2>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search notes by title, content, or tags...">
+                </div>
+            </div>
+            <div class="quick-actions">
+                <button class="quick-action-btn" id="sortNewest">
+                    <i class="fas fa-sort-amount-down"></i>
+                    Newest First
+                </button>
+                <button class="quick-action-btn" id="sortOldest">
+                    <i class="fas fa-sort-amount-up"></i>
+                    Oldest First
+                </button>
+                <button class="quick-action-btn" id="sortAlphabetical">
+                    <i class="fas fa-sort-alpha-down"></i>
+                    Sort A-Z
+                </button>
+                <button class="quick-action-btn" id="filterImportant">
+                    <i class="fas fa-star"></i>
+                    Important Only
+                </button>
+                <button class="quick-action-btn" id="exportNotes">
+                    <i class="fas fa-download"></i>
+                    Export Notes
+                </button>
+                <button class="quick-action-btn" id="importNotes">
+                    <i class="fas fa-upload"></i>
+                    Import Notes
+                </button>
+                <button class="quick-action-btn" id="settingsBtn">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </button>
+            </div>
+            <div class="drop-zone" id="dropZone">
+                <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: var(--primary-color); margin-bottom: 15px;"></i>
+                <h3>Drop JSON File Here</h3>
+                <p>Drag and drop your notes JSON file or click to select</p>
+                <input type="file" id="fileInput" accept=".json" style="display: none;">
+            </div>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalNotes">0</div>
+                    <div class="stat-label">Total Notes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="pinnedNotesCount">0</div>
+                    <div class="stat-label">Pinned</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="archivedNotesCount">0</div>
+                    <div class="stat-label">Archived</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="todayNotesCount">0</div>
+                    <div class="stat-label">Today</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="importantNotesCount">0</div>
+                    <div class="stat-label">Important</div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <h4>Weekly Progress</h4>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="productivityFill" style="width: 0%"></div>
+                </div>
+                <small id="productivityText">Create your first note this week!</small>
+            </div>
+            <div class="notes-grid" id="notesGrid">
+            </div>
+            <button class="btn-new-note" id="newNoteBtn">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="theme-selector">
+        <button class="theme-btn" id="themeToggle" title="Toggle Theme">
+            <i class="fas fa-palette"></i>
+        </button>
+        <button class="theme-btn" id="nightModeToggle" title="Night Mode">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+    <div class="modal" id="noteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Create New Note</h3>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <form id="noteForm">
+                <div class="form-group">
+                    <label for="noteTitle">Note Title *</label>
+                    <input type="text" id="noteTitle" class="form-control" placeholder="Enter a descriptive title for your note..." required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="noteDate">Date</label>
+                        <input type="date" id="noteDate" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="noteFolder">Course Folder</label>
+                        <select id="noteFolder" class="form-control">
+                            <option value="web-design">Web Design</option>
+                            <option value="algorithm">Algorithms</option>
+                            <option value="database">Database</option>
+                            <option value="frontend">Frontend Dev</option>
+                            <option value="backend">Backend Dev</option>
+                            <option value="general-english">General English</option>
+                            <option value="student-meeting">Group Projects</option>
+                            <option value="software-deployment">Deployment</option>
+                            <option value="professional-life">Career Prep</option>
+                            <option value="english-for-it">IT English</option>
+                            <option value="design">UI/UX Design</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="noteContent">Content *</label>
+                    <textarea id="noteContent" class="form-control" placeholder="Write your note content here... Mark important points with **bold** or use bullet points..." required></textarea>
+                    <small id="charCounter" style="display: block; text-align: right; margin-top: 5px; color: var(--gray-color);">Characters: 0</small>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="noteTags">Tags (comma separated)</label>
+                        <input type="text" id="noteTags" class="form-control" placeholder="e.g., important, exam, assignment, project">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Note Color Theme</label>
+                        <div class="color-options">
+                            <div class="color-option selected" data-color="white" style="background-color: white; border: 1px solid #ddd;"></div>
+                            <div class="color-option" data-color="#ffebee" style="background-color: #ffebee;"></div>
+                            <div class="color-option" data-color="#f3e5f5" style="background-color: #f3e5f5;"></div>
+                            <div class="color-option" data-color="#e8eaf6" style="background-color: #e8eaf6;"></div>
+                            <div class="color-option" data-color="#e1f5fe" style="background-color: #e1f5fe;"></div>
+                            <div class="color-option" data-color="#e8f5e8" style="background-color: #e8f5e8;"></div>
+                            <div class="color-option" data-color="#fff3cd" style="background-color: #fff3cd;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Priority Level</label>
+                    <div class="priority-options">
+                        <button type="button" class="priority-option priority-low" data-priority="low">
+                            <i class="fas fa-arrow-down"></i> Low
+                        </button>
+                        <button type="button" class="priority-option priority-medium selected" data-priority="medium">
+                            <i class="fas fa-minus"></i> Medium
+                        </button>
+                        <button type="button" class="priority-option priority-high" data-priority="high">
+                            <i class="fas fa-exclamation"></i> High
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <div>
+                        <button type="button" class="btn btn-danger" id="deleteBtn" style="display: none;">
+                            <i class="fas fa-trash"></i> Delete Note
+                        </button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-secondary" id="cancelBtn">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="saveBtn">
+                            <i class="fas fa-save"></i> Save Note
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal settings-modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">App Settings</h3>
+                <button class="close-btn" id="closeSettings">&times;</button>
+            </div>
+            <div class="settings-content">
+                <div class="settings-option">
+                    <label for="defaultColor">Default Note Color</label>
+                    <select id="defaultColor">
+                        <option value="white">White</option>
+                        <option value="#ffebee">Red</option>
+                        <option value="#f3e5f5">Purple</option>
+                        <option value="#e8eaf6">Blue</option>
+                        <option value="#e1f5fe">Light Blue</option>
+                        <option value="#e8f5e8">Green</option>
+                    </select>
+                </div>
+                <div class="settings-option">
+                    <label for="defaultPriority">Default Priority</label>
+                    <select id="defaultPriority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="settings-option">
+                    <label for="autoSaveInterval">Auto-save (seconds)</label>
+                    <select id="autoSaveInterval">
+                        <option value="5">5 seconds</option>
+                        <option value="10" selected>10 seconds</option>
+                        <option value="30">30 seconds</option>
+                        <option value="60">60 seconds</option>
+                    </select>
+                </div>
+                <div class="settings-option">
+                    <label for="notesPerPage">Notes per Page</label>
+                    <select id="notesPerPage">
+                        <option value="10">10 notes</option>
+                        <option value="20" selected>20 notes</option>
+                        <option value="50">50 notes</option>
+                        <option value="100">Show All</option>
+                    </select>
+                </div>
+                <div class="settings-option">
+                    <label for="spellCheck">Enable Spell Check</label>
+                    <input type="checkbox" id="spellCheck" checked>
+                </div>
+                <div class="settings-option">
+                    <label for="showCharCount">Show Character Count</label>
+                    <input type="checkbox" id="showCharCount" checked>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="resetSettings">
+                    <i class="fas fa-undo"></i> Reset Defaults
+                </button>
+                <button class="btn btn-primary" id="saveSettings">
+                    <i class="fas fa-save"></i> Save Settings
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="confirmation-modal" id="deleteModal">
+        <div class="confirmation-content">
+            <h3>Delete Note</h3>
+            <p>Are you sure you want to delete this note? This action cannot be undone and the note will be permanently removed.</p>
+            <div class="confirmation-actions">
+                <button class="btn btn-secondary" id="cancelDelete">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn btn-danger" id="confirmDelete">
+                    <i class="fas fa-trash"></i> Delete Permanently
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle" id="toastIcon"></i>
+        <span id="toastMessage">Note saved successfully!</span>
+    </div>
+    
+    <script src="/js/note taker.js"></script>
+    <!-- Color Customizer -->
+    <div class="color-customizer" id="colorCustomizer">
+        <div class="customizer-header">
+            <h3><i data-lucide="palette"></i> Theme Colors</h3>
+            <button class="close-customizer" onclick="toggleCustomizer()">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        
+        <div class="color-options" id="colorOptions">
+            <!-- Color options will be generated by JavaScript -->
+        </div>
+        
+        <div class="custom-color-picker">
+            <h4>Custom Colors</h4>
+            <div class="color-input-group">
+                <label>Primary:</label>
+                <input type="color" id="primaryColorPicker" value="#30bb09">
+                <input type="text" id="primaryColorText" value="#30bb09" placeholder="#30bb09">
+            </div>
+            <div class="color-input-group">
+                <label>Accent:</label>
+                <input type="color" id="accentColorPicker" value="#30bb09">
+                <input type="text" id="accentColorText" value="#30bb09" placeholder="#30bb09">
+            </div>
+            <div class="color-input-group">
+                <label>Secondary:</label>
+                <input type="color" id="secondaryColorPicker" value="#30bb09">
+                <input type="text" id="secondaryColorText" value="#30bb09" placeholder="#30bb09">
+            </div>
+            <div class="color-input-group">
+                <label>BG Color 1:</label>
+                <input type="color" id="bgColor1Picker" value="#000112">
+                <input type="text" id="bgColor1Text" value="#000112" placeholder="#000112">
+            </div>
+            <div class="color-input-group">
+                <label>BG Color 2:</label>
+                <input type="color" id="bgColor2Picker" value="#080336">
+                <input type="text" id="bgColor2Text" value="#080336" placeholder="#080336">
+            </div>
+            <div class="color-input-group">
+                <label>BG Color 3:</label>
+                <input type="color" id="bgColor3Picker" value="#02022a">
+                <input type="text" id="bgColor3Text" value="#02022a" placeholder="#02022a">
+            </div>
+        </div>
+        
+        <div class="color-preview">
+            <div class="preview-item preview-primary" title="Primary Color"></div>
+            <div class="preview-item preview-accent" title="Accent Color"></div>
+            <div class="preview-item preview-secondary" title="Secondary Color"></div>
+            <div class="preview-item preview-bg1" title="Background Color 1"></div>
+            <div class="preview-item preview-bg2" title="Background Color 2"></div>
+            <div class="preview-item preview-bg3" title="Background Color 3"></div>
+        </div>
+        
+        <div class="preset-colors">
+            <h4>Color Presets</h4>
+            <div class="preset-grid" id="presetColors">
+                <!-- Preset colors will be generated by JavaScript -->
+            </div>
+        </div>
+        
+        <div class="customizer-actions">
+            <button class="reset-colors" onclick="resetColors()">Reset</button>
+            <button class="apply-colors" onclick="applyCustomColors()">Apply Colors</button>
+        </div>
+    </div>
+
+    <!-- Customizer Toggle Button -->
+    <div class="customizer-toggle" id="customizerToggle" onclick="toggleCustomizer()">
+        <i data-lucide="palette"></i>
+    </div>
+
+    <footer class="footer">
+        <div class="floating-note" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="floating-note" style="left: 25%; animation-delay: -3s;"></div>
+        <div class="floating-note" style="left: 45%; animation-delay: -6s;"></div>
+        <div class="floating-note" style="left: 65%; animation-delay: -9s;"></div>
+        <div class="floating-note" style="left: 85%; animation-delay: -12s;"></div>
+        
+        <div class="footer-container">
+            <div class="footer-top">
+                <div class="footer-about">
+                    <div class="logo-carousel">
+                        <img
+                            class="logo-footer"
+                            src="/image/rika.png"
+                            alt="Note Taker Logo 1"
+                            loading="lazy"
+                        />
+                        <img
+                            class="logo-footer"
+                            src="/image/Vin.png"
+                            alt="Note Taker Logo 2"
+                            loading="lazy"
+                        />
+                        <img
+                            class="logo-footer"
+                            src="/image/makara.png"
+                            alt="Note Taker Logo 3"
+                            loading="lazy"
+                        />
+                    </div>
+                    <p>
+                        NoteTaker Pro is a powerful web-based application that allows users to create, edit, delete, and organize their notes efficiently. Collaborate with teams, customize your workspace, and never forget an idea again.
+                    </p>
+                    
+                    <div class="newsletter">
+                        <div class="newsletter-form">
+                            <input type="email" id="newsletterEmail" placeholder="Enter your email for updates" aria-label="Email for newsletter">
+                            <button onclick="subscribeNewsletter()">Subscribe</button>
+                        </div>
+                    </div>
+                    
+                    <div class="social-icons">
+                        <a href="#" class="social-icon" onclick="openSocial('facebook')" aria-label="Facebook">
+                            <i data-lucide="facebook"></i>
+                        </a>
+                        <a href="#" class="social-icon" onclick="openSocial('twitter')" aria-label="Twitter">
+                            <i data-lucide="twitter"></i>
+                        </a>
+                        <a href="#" class="social-icon" onclick="openSocial('instagram')" aria-label="Instagram">
+                            <i data-lucide="instagram"></i>
+                        </a>
+                        <a href="#" class="social-icon" onclick="openSocial('linkedin')" aria-label="LinkedIn">
+                            <i data-lucide="linkedin"></i>
+                        </a>
+                        <a href="#" class="social-icon" onclick="openSocial('github')" aria-label="GitHub">
+                            <i data-lucide="github"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h3>Note Taker Pages</h3>
+                        <ul>
+                            <li><a href="#" onclick="setView('dashboard')">Dashboard</a></li>
+                            <li><a href="#" onclick="setView('workspace')">Workspace</a></li>
+                            <li><a href="#" onclick="openSettings()">Appearance Settings</a></li>
+                            <li><a href="#" onclick="openProfile()">Edit Profile</a></li>
+                            <li><a href="#" onclick="logout()">Login / Logout</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Menu Pages</h3>
+                        <ul>
+                            <li><a href="#" onclick="setView('overview')">Overview</a></li>
+                            <li><a href="#" onclick="setView('dashboard')">Dashboard</a></li>
+                            <li><a href="#" onclick="setView('notebooks')">Notebooks</a></li>
+                            <li><a href="#" onclick="setView('starred')">Starred Notes</a></li>
+                            <li><a href="#" onclick="setView('tags')">Tags & Filters</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Workspace</h3>
+                        <ul>
+                            <li><a href="#" onclick="setView('team')">Team Space</a></li>
+                            <li><a href="#" onclick="setView('archive')">Archive</a></li>
+                            <li><a href="#" onclick="setView('trash')">Trash</a></li>
+                            <li><a href="#" onclick="setView('shared')">Shared Notes</a></li>
+                            <li><a href="#" onclick="setView('templates')">Templates</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>Copyright © 2024 – NoteTaker Premium. All Rights Reserved.</p>
+                <div class="bottom-links">
+                    <a href="#" onclick="openTerms()">Terms of Service</a>
+                    <a href="#" onclick="openPrivacy()">Privacy Policy</a>
+                    <a href="#" onclick="openSupport()">Support Center</a>
+                    <a href="#" onclick="openContact()">Contact Us</a>
+                    <a href="#" onclick="openCookies()">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <a href="#" class="back-to-top" id="backToTop" aria-label="Back to top">
+        <i data-lucide="arrow-up"></i>
+    </a>
+    <script src="/js/footer.js"></script>
+    
+</body>
+</html>
